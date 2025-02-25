@@ -21,14 +21,9 @@
             "name": "WING_LEFT"
         },
         {
-            "id": 10,
+            "id": 7,
             "supercategory": "coco_annotations",
-            "name": "scissor lift"
-        },
-        {
-            "id": 9,
-            "supercategory": "coco_annotations",
-            "name": "forklift"
+            "name": "Drone"
         },
         {
             "id": 2,
@@ -36,9 +31,14 @@
             "name": "ENGINE_LEFT"
         },
         {
-            "id": 7,
+            "id": 9,
             "supercategory": "coco_annotations",
-            "name": "Drone"
+            "name": "forklift"
+        },
+        {
+            "id": 10,
+            "supercategory": "coco_annotations",
+            "name": "scissor lift"
         }
     ],
     "images": [
