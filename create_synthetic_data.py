@@ -6,7 +6,7 @@ import os
 parser = argparse.ArgumentParser()
 parser.add_argument('scene', nargs='?', default="C:/Users/Bende/Documents/blender_hangar/scenes/a320_in_hangar_4.blend", help="Path to the scene.blend file")
 parser.add_argument('output_dir', nargs='?', default="output/", help="Path to where the final files will be saved")
-parser.add_argument('--runs', type=int, default=1, help="Number of runs to perform")
+parser.add_argument('--runs', type=int, default=20, help="Number of runs to perform")
 args = parser.parse_args()
 
 bproc.init()
@@ -22,7 +22,7 @@ object_categories = {
         "ceiling.lights", "ceiling.sprinkler", "ceiling_walkway", "ceiling_walkway.001",
         "ceiling_walkway.002", "details_offices", "door_large", "door_large.001",
         "door_large.002", "door_small", "door_small.001", "door_small.002",
-        "electric_wires", "electric_wires.001", "floor", "floor.grids", "ground",
+        "electric_wires", "electric_wires.001", "floor", "floor.grids", 
         "Hangar.walls", "main_doors", "offices_stairs", "pipes_back_wall",
         "pipes_side", "pipes_side.001", "pipes_side.002", "stairs.001", "stairs.002",
         "stairs.003", "stairs.004", "stairs.005", "stairs.006", "stairs.007",
@@ -32,20 +32,24 @@ object_categories = {
         "walkway.010", "walkway.011", "windows", "windows.001", "windows.002",
         "windows_offices"],
     2: ["ENGINE_LEFT", "ENGINE_RIGHT"],
-    3: ["AILERON_LEFT", "AILERON_RIGHT", "FLAPS_01_RIGHT", "FLAPS_02_LEFT",
-         "FLAPSKRUEGER_LEFT", "FLAPSKRUEGER_RIGHT", 
-         "SPOILER_2_1_LEFT", "SPOILER_2_1_RIGHT", "SPOILER_2_3_LEFT", 
-         "SPOILER_2_3_RIGHT", "SPOILER_LEFT", "SPOILER_RIGHT", 
-         "TAIL_ELEVATOR_LEFT", "TAIL_ELEVATOR_RIGHT", "TAIL_RUDDER"],
-    4: ["CH_Moving", "CH_Static", "DECAL_BANDIT", "DOOR", "FUSELAGE",
-         "FUSELAGE.FINS_EXTERNAL.DETAILS", "FUSELAGE.WHEELBAYS", "HoneywellJetwave", "LIVERY_OFFICIAL_FUSELAGE",
-         "LIVERY_OFFICIAL_FUSELAGE.RED DETAILS", "LIVERY_OFFICIAL_TRIML", "LIVERY_OFFICIAL_TRIMR",
-         "TAIL_ELEVATOR_TRIM_LEFT", "TAIL_ELEVATOR_TRIM_RIGHT", "WIPERS"],
-    5: ["C_DOOR_01_RIGHT", "C_DOOR_02_RIGHT", "DOOR01_LEFT", "DOOR01_RIGHT", "DOOR02_LEFT", "DOOR02_RIGHT",
-         "DOOR03_LEFT", "DOOR03_RIGHT"],
+    3: ["AILERON_LEFT", "AILERON_RIGHT", 
+        "FLAPS_RIGHT", "FLAPS_LEFT",
+        "FLAPSKRUEGER_LEFT", "FLAPSKRUEGER_RIGHT", 
+        "SPOILERS_LEFT", "SPOILERS_RIGHT", 
+        "TAIL_ELEVATOR_LEFT", "TAIL_ELEVATOR_RIGHT", "TAIL_RUDDER"],
+    4: ["DECAL_BANDIT", "DOORS", "FUSELAGE",
+        "FUSELAGE.FINS_EXTERNAL.DETAILS", "WHEELBAYS", "ANTENNA",
+        "TAIL_ELEVATOR_TRIM_LEFT", "TAIL_ELEVATOR_TRIM_RIGHT"],
+    5: ["CHOCKS_MAIN_GEAR_RIGHT", "CONE_B", "CONE_ENG_R", "CONE_R",
+        "GROUND_FuelPipe", "GROUND_GPUPipe", 
+        "LANDINGGEAR_LEFT", "LANDINGGEAR_RIGHT",
+        "MAIN_LG_LEFT", "MAIN_LG_LEFT_LANDED", "MAIN_LG_RIGHT", "MAIN_LG_RIGHT_LANDED",
+        "NOSE_LG", "NOSE_LG_DOOR", "NOSE_LG_DOOR_LANDED"],
     6: ["WING_LEFT", "WING_RIGHT"],
-    9: ["Drone"],
-    10: ["Tool cart"],
+    7: ["Drone"],
+    8: ["Tool cart"],
+    9: ["forklift"],
+    10: ["scissor lift"],
 }
 
 # Assign category IDs to the specified objects
@@ -92,7 +96,7 @@ for r in range(args.runs):
     f1.set_rotation_euler(np.random.uniform([0, 0, 0], [0, 0, 1.5708]))
 
     # Added camera pose via location + euler angles
-    bproc.camera.add_camera_pose(bproc.math.build_transformation_mat([-36.0, 4.0, 18.0], [0, 0, 1.5708]))
+    bproc.camera.add_camera_pose(bproc.math.build_transformation_mat([-36.0, 4.0, 18.5], [0, 0, 1.5708]))
     
     # Render the whole pipeline
     data = bproc.renderer.render()
