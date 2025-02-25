@@ -1,7 +1,6 @@
 import json
 
 # Specify the category names you want to keep.
-# Change these to the categories you want.
 desired_categories = ["WING_LEFT", "Drone", "ENGINE_LEFT", "forklift", "scissor lift"]
 
 # Load the original COCO annotations file.
@@ -10,6 +9,10 @@ with open("output/coco_data/coco_annotations.json", "r") as f:
 
 # Filter categories to include only those in desired_categories.
 filtered_categories = [cat for cat in data["categories"] if cat["name"] in desired_categories]
+
+# Enforce the desired order based on desired_categories.
+order = {name: i for i, name in enumerate(desired_categories)}
+filtered_categories = sorted(filtered_categories, key=lambda cat: order[cat["name"]])
 
 # Get a set of allowed category IDs.
 allowed_cat_ids = {cat["id"] for cat in filtered_categories}
