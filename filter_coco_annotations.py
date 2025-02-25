@@ -2,10 +2,10 @@ import json
 
 # Specify the category names you want to keep.
 # Change these to the categories you want.
-desired_categories = ["WING_LEFT", "Drone", "ENGINE_LEFT"]
+desired_categories = ["WING_LEFT", "Drone", "ENGINE_LEFT", "forklift", "scissor lift"]
 
 # Load the original COCO annotations file.
-with open("coco_annotations.json", "r") as f:
+with open("output/coco_data/coco_annotations.json", "r") as f:
     data = json.load(f)
 
 # Filter categories to include only those in desired_categories.
@@ -31,7 +31,7 @@ filtered_data = {
 }
 
 # Write the filtered data to a new JSON file.
-with open("filtered_coco_annotations.json", "w") as f:
+with open("output/coco_data/filtered_coco_annotations.json", "w") as f:
     json.dump(filtered_data, f, indent=4)
 
 print("Filtered annotations saved to filtered_coco_annotations.json")
