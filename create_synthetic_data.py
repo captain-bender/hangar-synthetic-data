@@ -89,6 +89,9 @@ bproc.renderer.enable_segmentation_output(map_by=["category_id", "instance", "na
 with open('drone_cameras_locations.yaml', 'r') as file:
     drone_camera_locations = yaml.safe_load(file)
 
+# Print the dictionary
+# print(drone_camera_locations)
+
 # Iterate through the locations and access the camera and drone positions and rotations
 for case, data in drone_camera_locations.items():
     camera_position = data['Camera']['position']
