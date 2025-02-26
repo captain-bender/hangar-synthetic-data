@@ -1,0 +1,35 @@
+CaseA_LeftWing:
+  Camera:
+    position: [-36.0, 4.0, 18.5]
+  Drone:
+    low:
+      position: [-38.0, 0.0, 3.0]
+    high:
+      position: [-34.0, 8.0, 3.0]
+
+CaseB_Nose:
+  Camera:
+    position: [-44.0, -11.0, 18.5]
+  Drone:
+    low:
+      position: [-45.5, -14.5, 5.5]
+    high:
+      position: [-42.5, -7.5, 5.5]
+
+CaseC_Tail:
+  Camera:
+    position: [-44.0, 22.0, 18.5]
+  Drone:
+    low:
+      position: [-45.5, 18.5, 5.5]
+    high:
+      position: [-42.5, 25.5, 5.5]
+
+CaseD_Body:
+  Camera:
+    position: [-48.0, 8.0, 18.5]
+  Drone:
+    low:
+      position: [-49.5, 4.5, 4.5]
+    high:
+      position: [-46.0, 11.5, 4.5]
