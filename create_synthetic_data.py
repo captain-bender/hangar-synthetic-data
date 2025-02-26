@@ -2,11 +2,12 @@ import blenderproc as bproc
 import argparse
 import numpy as np
 import os
+import yaml
 
 parser = argparse.ArgumentParser()
 parser.add_argument('scene', nargs='?', default="C:/Users/Bende/Documents/blender_hangar/scenes/a320_in_hangar_4.blend", help="Path to the scene.blend file")
 parser.add_argument('output_dir', nargs='?', default="output/", help="Path to where the final files will be saved")
-parser.add_argument('--runs', type=int, default=20, help="Number of runs to perform")
+parser.add_argument('--runs', type=int, default=1, help="Number of runs to perform")
 args = parser.parse_args()
 
 bproc.init()
@@ -84,29 +85,40 @@ bproc.camera.set_intrinsics_from_K_matrix(K=K_matrix, image_width=1920, image_he
 bproc.renderer.enable_normals_output()
 bproc.renderer.enable_segmentation_output(map_by=["category_id", "instance", "name"])
 
-# Perform multiple runs
-for r in range(args.runs):
-    # Clear all keyframes from the previous run
-    bproc.utility.reset_keyframes()
+# Load the YAML file
+with open('drone_cameras_locations.yaml', 'r') as file:
+    drone_camera_locations = yaml.safe_load(file)
 
-    # Place the objects randomly for each run
-    f1 = bproc.filter.one_by_attr(objs, "name", "Drone")
-
-    f1.set_location(np.random.uniform([-38.0, 0.0, 3.0], [-34.0, 8.0, 3.0]))
-    f1.set_rotation_euler(np.random.uniform([0, 0, 0], [0, 0, 1.5708]))
-
-    # Added camera pose via location + euler angles
-    bproc.camera.add_camera_pose(bproc.math.build_transformation_mat([-36.0, 4.0, 18.5], [0, 0, 1.5708]))
+# Iterate through the locations and access the camera and drone positions and rotations
+for case, data in drone_camera_locations.items():
+    camera_position = data['Camera']['position']
+    drone_low_position = data['Drone']['low']['position']
+    drone_high_position = data['Drone']['high']['position']
     
-    # Render the whole pipeline
-    data = bproc.renderer.render()
 
-    # Write data to coco file in a single  output directory Specified in line 9
-    bproc.writer.write_coco_annotations(os.path.join(args.output_dir, 'coco_data'),
-                                    instance_segmaps=data["instance_segmaps"],
-                                    instance_attribute_maps=data["instance_attribute_maps"],
-                                    colors=data["colors"],
-                                    color_file_format="JPEG",
-                                    append_to_existing_output=True)
+    # Perform multiple runs
+    for r in range(args.runs):
+        # Clear all keyframes from the previous run
+        bproc.utility.reset_keyframes()
 
-    bproc.writer.write_hdf5(os.path.join(args.output_dir), data, append_to_existing_output=True)
+        # Place the objects randomly for each run
+        f1 = bproc.filter.one_by_attr(objs, "name", "Drone")
+
+        f1.set_location(np.random.uniform(drone_low_position, drone_high_position))
+        f1.set_rotation_euler(np.random.uniform([0, 0, 0], [0, 0, 1.5708]))
+
+        # Added camera pose via location + euler angles
+        bproc.camera.add_camera_pose(bproc.math.build_transformation_mat(camera_position, [0.0, 0.0,  1.5708]))
+        
+        # Render the whole pipeline
+        data = bproc.renderer.render()
+
+        # Write data to coco file in a single  output directory Specified in line 9
+        bproc.writer.write_coco_annotations(os.path.join(args.output_dir, 'coco_data'),
+                                        instance_segmaps=data["instance_segmaps"],
+                                        instance_attribute_maps=data["instance_attribute_maps"],
+                                        colors=data["colors"],
+                                        color_file_format="JPEG",
+                                        append_to_existing_output=True)
+
+        bproc.writer.write_hdf5(os.path.join(args.output_dir), data, append_to_existing_output=True)
